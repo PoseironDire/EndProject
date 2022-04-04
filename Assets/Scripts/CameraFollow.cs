@@ -19,18 +19,12 @@ public class CameraFollow : MonoBehaviour
 
     void FixedUpdate()
     {
-        var distance = player.GetComponent<Rigidbody2D>().velocity.magnitude * 0.1f;
-        Camera.main.orthographicSize = viewSize + distance * 0.1f;
+        var distance = player.GetComponent<Rigidbody2D>().velocity.magnitude * 0.5f;
+        Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, viewSize + distance * 0.2f, 0.1f);
 
         Vector3 point = GetComponent<Camera>().WorldToViewportPoint(player.transform.position);
         Vector3 delta = player.transform.position - GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
         Vector3 destination = new Vector3(player.transform.position.x + offset.x, player.transform.position.y + offset.y, offset.z - 10) + delta;
         transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, movementDamping);
-
-        // Vector3 difference = Camera.main.ScreenToWorldPoint(player.transform.position) - transform.position;
-        // difference.Normalize();
-        // float rotation_z = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
-        // var desiredRotQ = player.transform.rotation;
-        // transform.rotation = Quaternion.Lerp(transform.rotation, desiredRotQ, Time.deltaTime * rotationDamping);
     }
 }
