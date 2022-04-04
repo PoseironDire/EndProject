@@ -3,36 +3,31 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     //Physics
-    [HideInInspector] public Rigidbody2D rb2D;
-    private Vector3 velocity = Vector3.zero;
+    private Rigidbody2D rb2D;
+
     //Controlls & Camera
+    private ControllerTypes controllerTypes;
     [Range(100, 1000)] public float maxSpeedY;
     [Range(100, 1000)] public float maxSpeedX;
     [Range(10, 100)] public float maxSpeedRot;
     [Range(10, 500)] public float drag;
-    float rushSpeed = 0;
-    [SerializeField] ControllerTypes controllerTypes;
     [SerializeField] Camera playerCamera;
+    private float rushSpeed = 0;
+
     //Shooting
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] Transform bulletSpawnPoint;
     [SerializeField] float timeBetweenShots = 0.5f;
-    float timeSinceLastShot = 0f;
-    //Inputs
-    float kXInput;
-    float kYInput = -1;
-    float lXCInput;
-    float lYCInput = -1;
-    float rXCInput;
-    float rYCInput;
+    private float timeSinceLastShot = 0f;
 
     void Start()
     {
-        GameObject.Find("Trail").GetComponent<TrailRenderer>().emitting = false;
+        //Get Components
         rb2D = GetComponent<Rigidbody2D>();
+        controllerTypes = GetComponent<ControllerTypes>();
     }
 
-    void Fire()
+    void Fire() //Shooting Method
     {
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
     }
@@ -41,13 +36,8 @@ public class PlayerController : MonoBehaviour
     {
         rb2D.drag = drag;
 
-        //Movement Inputs
-        kXInput = Input.GetAxisRaw("Horizontal");
-        kYInput = Input.GetAxisRaw("Vertical");
-        lXCInput = Input.GetAxis("LX");
-        lYCInput = Input.GetAxis("LY");
-        rXCInput = Input.GetAxis("RX");
-        rYCInput = Input.GetAxis("RY");
+        //Disable Trail
+        GameObject.Find("Trail").GetComponent<TrailRenderer>().emitting = false;
 
         //Shooting Input
         timeSinceLastShot += Time.deltaTime;
@@ -59,6 +49,7 @@ public class PlayerController : MonoBehaviour
                 timeSinceLastShot = 0;
             }
         }
+
         //Rush Input
         bool hasReleasedRushButton = true;
         bool rushing = false;
@@ -86,27 +77,20 @@ public class PlayerController : MonoBehaviour
             rushSpeed = 0;
             GetComponent<SpriteRenderer>().color = Color.white;
             GameObject.Find("Handle").GetComponent<SpriteRenderer>().color = Color.white;
-            GameObject.Find("Trail").GetComponent<TrailRenderer>().emitting = false;
         }
+        //Deadzones for Joysticks
         float deadzone = 0.2f;
-        if (lYCInput <= deadzone && lYCInput >= -deadzone && lXCInput <= deadzone && lXCInput >= -deadzone)
+        if (Input.GetAxis("LY") <= deadzone && Input.GetAxis("LY") >= -deadzone && Input.GetAxis("LX") <= deadzone && Input.GetAxis("LX") >= -deadzone)
             rushing = false;
     }
 
     void FixedUpdate()
     {
-        //Movement with Keyboard
-        if (controllerTypes.xboxOneController != 1 && controllerTypes.ps4Controller != 1)
-        {
-            rb2D.AddForce(playerCamera.transform.right * (kXInput * (maxSpeedY + rushSpeed)));
-            rb2D.AddForce(playerCamera.transform.up * (kYInput * (maxSpeedX + rushSpeed)));
-        }
-        //Movement with Joystick
-        else if (controllerTypes.xboxOneController == 1 || controllerTypes.ps4Controller == 1)
-        {
-            rb2D.AddForce(playerCamera.transform.right * (lXCInput * (maxSpeedY + rushSpeed)));
-            rb2D.AddForce(playerCamera.transform.up * (lYCInput * (maxSpeedX + rushSpeed)));
-        }
+        //Movement
+        float right = (controllerTypes.xboxOneController == 1 || controllerTypes.ps4Controller == 1) ? Input.GetAxis("LX") : Input.GetAxisRaw("Horizontal");
+        rb2D.AddForce(playerCamera.transform.right * right * (maxSpeedY + rushSpeed));
+        float up = (controllerTypes.xboxOneController == 1 || controllerTypes.ps4Controller == 1) ? Input.GetAxis("LY") : Input.GetAxisRaw("Vertical");
+        rb2D.AddForce(playerCamera.transform.up * up * (maxSpeedX + rushSpeed));
 
         //Rotation with Mouse
         if (Input.GetMouseButton(1)) //Right Mouse Click
@@ -117,15 +101,18 @@ public class PlayerController : MonoBehaviour
             var desiredRot = Quaternion.Euler(0f, 0f, z - 90);
             transform.rotation = Quaternion.Lerp(transform.rotation, desiredRot, Time.deltaTime * maxSpeedRot); //Smooth Input
         }
+
+        Vector3 velocity = Vector3.zero;
         //Rotation with Joystick
-        if (rXCInput != 0 || rYCInput != 0)  //Only Rotate if Input is detected
+        if (Input.GetAxis("RX") != 0 || Input.GetAxis("RY") != 0)  //Only Rotate if Input is detected
         {
-            transform.up = Vector3.SmoothDamp(transform.up, new Vector3(rXCInput, rYCInput), ref velocity, maxSpeedRot / 500); //Smooth Input
+            transform.up = Vector3.SmoothDamp(transform.up, new Vector3(Input.GetAxis("RX"), Input.GetAxis("RY")), ref velocity, maxSpeedRot / 500); //Smooth Input
         }
+
         //Disable Strafe
-        if (!Input.GetMouseButton(1) && rXCInput == 0 && rYCInput == 0)
+        if (!Input.GetMouseButton(1) && Input.GetAxis("RX") == 0 && Input.GetAxis("RY") == 0)
         {
-            transform.up = Vector3.SmoothDamp(transform.up, new Vector3(lXCInput, lYCInput), ref velocity, maxSpeedRot / 500); //Smooth Input
+            transform.up = Vector3.SmoothDamp(transform.up, new Vector3(right, up), ref velocity, maxSpeedRot / 500); //Smooth Input
         }
     }
 }

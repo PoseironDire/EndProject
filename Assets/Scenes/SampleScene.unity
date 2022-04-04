@@ -837,8 +837,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 372249742}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.6147, z: 0}
-  m_LocalScale: {x: 0.2576, y: 0.71802413, z: 1}
+  m_LocalPosition: {x: 0, y: 0.7, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.7, z: 1}
   m_Children:
   - {fileID: 1098211696}
   m_Father: {fileID: 1985325318}
@@ -1563,7 +1563,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1098211695}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.47, z: 0}
+  m_LocalPosition: {x: 0, y: 0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 372249743}
@@ -2836,12 +2836,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98ef50dde52e266408cb6444d00e0e46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb2D: {fileID: 0}
   maxSpeedY: 1000
   maxSpeedX: 1000
   maxSpeedRot: 20
   drag: 20
-  controllerTypes: {fileID: 1985325321}
   playerCamera: {fileID: 519420031}
   bulletPrefab: {fileID: 2749093845925879715, guid: 15814322b3fad95468f14ba880912f68, type: 3}
   bulletSpawnPoint: {fileID: 1098211696}
@@ -3427,4 +3425,4 @@ TrailRenderer:
     generateLightingData: 0
   m_MinVertexDistance: 0
   m_Autodestruct: 0
-  m_Emitting: 1
+  m_Emitting: 0

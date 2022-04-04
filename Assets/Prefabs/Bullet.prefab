@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 2749093845925879715}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.03, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialVelocity: 75
-  initialSpread: 2
+  initialSpread: 1
   lifeTime: 0.4
 --- !u!50 &3147960785471142408
 Rigidbody2D:
@@ -110,7 +110,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 7c1ea699a4c2d4042900c7066462c96b, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.5
-  m_Pitch: 2.9
+  m_Pitch: 1.5
   Loop: 0
   Mute: 0
   Spatialize: 0
