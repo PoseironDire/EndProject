@@ -1,18 +1,19 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : HealthHost
 {
     //Physics
     private Rigidbody2D rb2D;
 
     //Controlls & Camera
-    private ControllerTypes controllerTypes;
     [Range(100, 1000)] public float maxSpeedY;
     [Range(100, 1000)] public float maxSpeedX;
     [Range(10, 100)] public float maxSpeedRot;
     [Range(10, 500)] public float drag;
     [SerializeField] Camera playerCamera;
     private float rushSpeed = 0;
+    float rightMove = 0;
+    float upMove = 0;
 
     //Shooting
     [SerializeField] GameObject bulletPrefab;
@@ -20,11 +21,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float timeBetweenShots = 0.5f;
     private float timeSinceLastShot = 0f;
 
+    //Rushing
+    bool hasReleasedRushButton = true;
+    bool rushing = false;
+
     void Start()
     {
         //Get Components
         rb2D = GetComponent<Rigidbody2D>();
-        controllerTypes = GetComponent<ControllerTypes>();
     }
 
     void Fire() //Shooting Method
@@ -51,8 +55,6 @@ public class PlayerController : MonoBehaviour
         }
 
         //Rush Input
-        bool hasReleasedRushButton = true;
-        bool rushing = false;
         if (Input.GetAxisRaw("Rush") > 0 || Input.GetAxisRaw("Rush2") > 0)
         {
             if (hasReleasedRushButton)
@@ -80,17 +82,26 @@ public class PlayerController : MonoBehaviour
         }
         //Deadzones for Joysticks
         float deadzone = 0.2f;
-        if (Input.GetAxis("LY") <= deadzone && Input.GetAxis("LY") >= -deadzone && Input.GetAxis("LX") <= deadzone && Input.GetAxis("LX") >= -deadzone)
+        if (upMove <= deadzone && upMove >= -deadzone && rightMove <= deadzone && rightMove >= -deadzone)
             rushing = false;
     }
 
     void FixedUpdate()
     {
         //Movement
-        float right = (controllerTypes.xboxOneController == 1 || controllerTypes.ps4Controller == 1) ? Input.GetAxis("LX") : Input.GetAxisRaw("Horizontal");
-        rb2D.AddForce(playerCamera.transform.right * right * (maxSpeedY + rushSpeed));
-        float up = (controllerTypes.xboxOneController == 1 || controllerTypes.ps4Controller == 1) ? Input.GetAxis("LY") : Input.GetAxisRaw("Vertical");
-        rb2D.AddForce(playerCamera.transform.up * up * (maxSpeedX + rushSpeed));
+        if (Input.GetAxis("LX") == 0 && Input.GetAxis("LY") == 0)
+        {
+            rightMove = Input.GetAxisRaw("Horizontal");
+            upMove = Input.GetAxisRaw("Vertical");
+        }
+        if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
+        {
+            rightMove = Input.GetAxis("LX");
+            upMove = Input.GetAxis("LY");
+        }
+
+        rb2D.AddForce(playerCamera.transform.right * rightMove * (maxSpeedY + rushSpeed));
+        rb2D.AddForce(playerCamera.transform.up * upMove * (maxSpeedX + rushSpeed));
 
         //Rotation with Mouse
         if (Input.GetMouseButton(1)) //Right Mouse Click
@@ -112,7 +123,7 @@ public class PlayerController : MonoBehaviour
         //Disable Strafe
         if (!Input.GetMouseButton(1) && Input.GetAxis("RX") == 0 && Input.GetAxis("RY") == 0)
         {
-            transform.up = Vector3.SmoothDamp(transform.up, new Vector3(right, up), ref velocity, maxSpeedRot / 500); //Smooth Input
+            transform.up = Vector3.SmoothDamp(transform.up, new Vector3(rightMove, upMove), ref velocity, maxSpeedRot / 500); //Smooth Input
         }
     }
 }

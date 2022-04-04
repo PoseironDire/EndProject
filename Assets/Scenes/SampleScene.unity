@@ -2671,7 +2671,7 @@ GameObject:
   - component: {fileID: 1878176596}
   - component: {fileID: 1878176595}
   - component: {fileID: 1878176594}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Static Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2815,7 +2815,6 @@ GameObject:
   - component: {fileID: 1985325317}
   - component: {fileID: 1985325319}
   - component: {fileID: 1985325320}
-  - component: {fileID: 1985325321}
   - component: {fileID: 1985325316}
   m_Layer: 0
   m_Name: Player
@@ -2836,6 +2835,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98ef50dde52e266408cb6444d00e0e46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageText: {fileID: 6627507350251465961, guid: 8445626023535f34980e4e11d9474d60, type: 3}
   maxSpeedY: 1000
   maxSpeedX: 1000
   maxSpeedRot: 20
@@ -2948,20 +2948,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &1985325321
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1985325315}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f6c28ed026281140815e5fb44a9f8e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  xboxOneController: 0
-  ps4Controller: 0
 --- !u!1 &1996823328
 GameObject:
   m_ObjectHideFlags: 0
