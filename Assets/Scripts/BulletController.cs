@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletController : MonoBehaviour
@@ -11,10 +9,8 @@ public class BulletController : MonoBehaviour
 
     Rigidbody2D rb2D;
 
-    void Awake()
-    {
-        GetComponent<AudioSource>().pitch = GetComponent<AudioSource>().pitch * UnityEngine.Random.Range(0.9f, 1.1f);
-    }
+    [SerializeField] GameObject hitmarkPrefab;
+    [SerializeField] Transform hitmarkSpawn;
 
     void Start()
     {
@@ -29,16 +25,18 @@ public class BulletController : MonoBehaviour
     {
         var dir = rb2D.velocity;
         var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        rb2D.MoveRotation(angle - 90);
+        if (rb2D.bodyType != RigidbodyType2D.Static)
+            rb2D.MoveRotation(angle - 90);
+
+        GetComponent<AudioSource>().pitch = UnityEngine.Random.Range(1, 3);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag != "Player")
-        {
-            GetComponent<BoxCollider2D>().enabled = false;
-            GetComponent<SpriteRenderer>().enabled = false;
-            // Destroy(this.gameObject);
-        }
+        GameObject bullet = Instantiate(hitmarkPrefab, hitmarkSpawn.position, hitmarkSpawn.rotation);
+        GetComponent<SpriteRenderer>().enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
+        rb2D.bodyType = RigidbodyType2D.Static;
+        Destroy(this.gameObject, lifeTime);
     }
 }

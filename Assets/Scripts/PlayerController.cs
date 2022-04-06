@@ -2,16 +2,17 @@ using UnityEngine;
 
 public class PlayerController : HealthHost
 {
-    //Physics
-    private Rigidbody2D rb2D;
+    //Player
+    [SerializeField] GameObject player;
+    private Rigidbody2D rb;
 
     //Controlls & Camera
-    [Range(100, 1000)] public float maxSpeedY;
-    [Range(100, 1000)] public float maxSpeedX;
-    [Range(10, 100)] public float maxSpeedRot;
-    [Range(10, 500)] public float drag;
+    [Range(100, 1000)] public float maxSpeedY = 1000;
+    [Range(100, 1000)] public float maxSpeedX = 1000;
+    [Range(10, 100)] public float maxSpeedRot = 30;
+    [Range(10, 500)] public float drag = 20;
     [SerializeField] Camera playerCamera;
-    private float rushSpeed = 0;
+    float rushSpeed = 0;
     float rightMove = 0;
     float upMove = 0;
 
@@ -28,20 +29,21 @@ public class PlayerController : HealthHost
     void Start()
     {
         //Get Components
-        rb2D = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void Fire() //Shooting Method
     {
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+        timeSinceLastShot = 0;
     }
 
     void Update()
     {
-        rb2D.drag = drag;
+        rb.drag = drag;
 
         //Disable Trail
-        GameObject.Find("Trail").GetComponent<TrailRenderer>().emitting = false;
+        player.transform.Find("Trail").GetComponent<TrailRenderer>().emitting = false;
 
         //Shooting Input
         timeSinceLastShot += Time.deltaTime;
@@ -50,7 +52,6 @@ public class PlayerController : HealthHost
             if (timeSinceLastShot > timeBetweenShots)
             {
                 Fire();
-                timeSinceLastShot = 0;
             }
         }
 
@@ -70,15 +71,11 @@ public class PlayerController : HealthHost
         if (rushing)
         {
             rushSpeed = (maxSpeedX + maxSpeedY) / 4;
-            GetComponent<SpriteRenderer>().color = Color.blue;
-            GameObject.Find("Handle").GetComponent<SpriteRenderer>().color = Color.blue;
-            GameObject.Find("Trail").GetComponent<TrailRenderer>().emitting = true;
+            player.transform.Find("Trail").GetComponent<TrailRenderer>().emitting = true;
         }
         else
         {
             rushSpeed = 0;
-            GetComponent<SpriteRenderer>().color = Color.white;
-            GameObject.Find("Handle").GetComponent<SpriteRenderer>().color = Color.white;
         }
         //Deadzones for Joysticks
         float deadzone = 0.2f;
@@ -100,8 +97,8 @@ public class PlayerController : HealthHost
             upMove = Input.GetAxis("LY");
         }
 
-        rb2D.AddForce(playerCamera.transform.right * rightMove * (maxSpeedY + rushSpeed));
-        rb2D.AddForce(playerCamera.transform.up * upMove * (maxSpeedX + rushSpeed));
+        rb.AddForce(playerCamera.transform.right * rightMove * (maxSpeedY + rushSpeed));
+        rb.AddForce(playerCamera.transform.up * upMove * (maxSpeedX + rushSpeed));
 
         //Rotation with Mouse
         if (Input.GetMouseButton(1)) //Right Mouse Click

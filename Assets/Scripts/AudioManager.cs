@@ -1,5 +1,4 @@
 using System;
-using UnityEngine.Audio;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -15,6 +14,7 @@ public class AudioManager : MonoBehaviour
             s.source = gameObject.AddComponent<AudioSource>();
             s.source.clip = s.clip;
 
+            s.source.priority = s.priority;
             s.source.volume = s.volume;
             s.source.pitch = s.pitch;
             ;
@@ -25,7 +25,7 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         if (soundtrack)
-            Play("Theme");
+            Play("Soundtrack");
         if (ambience)
             Play("Ambience");
     }

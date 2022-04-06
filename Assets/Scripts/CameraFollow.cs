@@ -6,7 +6,7 @@ public class CameraFollow : MonoBehaviour
 {
     private Vector3 velocity = Vector3.zero;
     public Vector3 offset;
-    [Range(0, 10)] public float viewSize = 5;
+    [Range(0, 30)] public float viewSize = 10;
     [Range(0, 1)] public float movementDamping = 0.15f;
     [Range(1, 20)] public float rotationDamping = 3;
 
