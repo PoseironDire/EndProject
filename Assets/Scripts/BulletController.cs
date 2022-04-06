@@ -10,7 +10,7 @@ public class BulletController : MonoBehaviour
     Rigidbody2D rb2D;
 
     [SerializeField] GameObject hitmarkPrefab;
-    [SerializeField] Transform hitmarkSpawn;
+    public Transform hitmarkSpawn;
 
     void Start()
     {
@@ -38,5 +38,7 @@ public class BulletController : MonoBehaviour
         GetComponent<BoxCollider2D>().enabled = false;
         rb2D.bodyType = RigidbodyType2D.Static;
         Destroy(this.gameObject, lifeTime);
+        if (transform.childCount > 1)
+            Destroy(transform.GetChild(1).gameObject);
     }
 }

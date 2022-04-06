@@ -81,6 +81,8 @@ public class NpcController : HealthHost
 
     void FixedUpdate()
     {
+        Coloring();
+
         float degreesPerSecond = 20;
         transform.Rotate(new Vector3(0, 0, degreesPerSecond) * Time.deltaTime);
     }

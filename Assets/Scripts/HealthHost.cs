@@ -1,24 +1,43 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class HealthHost : MonoBehaviour
 {
     [SerializeField] GameObject damageText;
-    float shift = 1;
+    Dictionary<SpriteRenderer, Color> originalColor = new Dictionary<SpriteRenderer, Color>();
 
-    void FixedUpdate()
+    void Awake()
     {
-        shift = Mathf.Lerp(shift, 1, 0.1f);
-        Color newColor = new Color(1f, shift, shift, 1f);
-        GetComponent<SpriteRenderer>().color = newColor;
+        SpriteRenderer[] children = transform.GetComponentsInChildren<SpriteRenderer>();
+
+        foreach (SpriteRenderer renderer in children)
+        {
+            originalColor.Add(renderer, renderer.color);
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == 3)
         {
-            shift = 0;
+            foreach (SpriteRenderer renderer in originalColor.Keys)
+            {
+                if (renderer.color != Color.red)
+                    renderer.color = Color.red;
+                else
+                    renderer.color = Color.white;
+            }
             DamageIndicator indicator = Instantiate(damageText, transform.position, Quaternion.identity).GetComponent<DamageIndicator>();
             indicator.SetDamageText(Random.Range(1, 100));
         }
     }
+
+    public void Coloring()
+    {
+        foreach (SpriteRenderer renderer in originalColor.Keys)
+        {
+            renderer.color = Color.Lerp(renderer.color, originalColor[renderer], 0.1f);
+        }
+    }
 }
+
