@@ -64445,7 +64445,7 @@ MonoBehaviour:
   initialProjectileSpread: 0.7
   projectileLifeTime: 1
   firesPerSecond: 0.1
-  projectileVolume: 0.5
+  projectileVolume: 0.4
   minPitch: 2
   maxPitch: 4
 --- !u!212 &1985325317
