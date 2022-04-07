@@ -1,15 +1,14 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class HealthHost : MonoBehaviour
+public class EnergyHost : MonoBehaviour
 {
     [SerializeField] GameObject damageText;
     Dictionary<SpriteRenderer, Color> originalColor = new Dictionary<SpriteRenderer, Color>();
 
-    void Awake()
+    void Start()
     {
-        if (gameObject.tag != "Player")
-            GetComponent<SpriteRenderer>().color = new Color(UnityEngine.Random.Range(0.1f, 1f), UnityEngine.Random.Range(0.1f, 1f), UnityEngine.Random.Range(0.1f, 1f), 1);
+        if (gameObject.tag != "Player") GetComponent<SpriteRenderer>().color = new Color(UnityEngine.Random.Range(0.1f, 1f), UnityEngine.Random.Range(0.1f, 1f), UnityEngine.Random.Range(0.1f, 1f), 1);
 
         SpriteRenderer[] children = transform.GetComponentsInChildren<SpriteRenderer>();
 
@@ -35,7 +34,7 @@ public class HealthHost : MonoBehaviour
         }
     }
 
-    public void Coloring()
+    public void LerpColor()
     {
         foreach (SpriteRenderer renderer in originalColor.Keys)
         {
@@ -43,4 +42,3 @@ public class HealthHost : MonoBehaviour
         }
     }
 }
-

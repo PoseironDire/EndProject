@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class Box : HealthHost
+public class Box : EnergyHost
 {
     void FixedUpdate()
     {
-        Coloring();
+        LerpColor();
     }
 }

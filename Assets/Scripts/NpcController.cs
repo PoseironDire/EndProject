@@ -1,89 +1,72 @@
 using UnityEngine;
 
-public class NpcController : HealthHost
+public class NpcController : EnergyHost
 {
-    //Physics
-    [SerializeField] GameObject player;
-    private Rigidbody2D rb2D;
+    private Rigidbody2D rb; //Rigidbody
 
-    //Controlls
-    [Range(100, 1000)] public float maxSpeedY = 1000;
-    [Range(100, 1000)] public float maxSpeedX = 1000;
-    [Range(10, 100)] public float maxSpeedRot = 30;
-    [Range(10, 500)] public float drag = 20;
-    float rushSpeed = 0;
-    float rightMove = 0;
-    float upMove = 0;
+    [Range(100, 1000)] public float maxMoveSpeed = 750; //Max Move Speed
+    [Range(10, 100)] public float maxRotationResistance = 50; //Rotation Resistance
+    [Range(10, 500)] public float drag = 10; //Drag
 
-    //Shooting
-    [SerializeField] GameObject bulletPrefab;
-    [SerializeField] Transform bulletSpawnPoint;
-    [SerializeField] float timeBetweenShots = 0.5f;
-    private float timeSinceLastShot = 0f;
+    Vector3 velocity = Vector3.zero; //Vector Zero
+    float rushSpeed; //Speed While Rushing
+    float fireSpeed; //Speed While Firing
+    float XMove; //X Movement Input 
+    float YMove; //Y Movement Input
 
-    //Rushing
-    bool hasReleasedRushButton = true;
-    bool rushing = false;
+    [SerializeField] GameObject projectilePrefab; //Projectile
+    [SerializeField] Transform projectileSpawnPoint; //Projectile Spawn Point
+    [Range(30, 300)] public float initialProjectileVelocity = 100; //Projectile Speed
+    [Range(0, 10)] public float initialProjectileSpread = 1; //Projectile Spread
+    [Range(0, 1)] public float projectileLifeTime = 0.7f; //Projectile Life Time
+    [Range(0, 1)] public float firesPerSecond = 0.5f; //Fires Per Second
+    [Range(0, 1)] public float projectileVolume = 0.5f; //Volume
+    [Range(0, 5)] public float minPitch = 1; //Minimum Pitch
+    [Range(0, 5)] public float maxPitch = 2.5f; //Maximum Pitch
 
-    void Start()
+    private float timeSinceLastFire = 0f; //Time Since Last Fire
+
+    // bool rushing = false; //Rushing Bool
+
+    void Awake()
     {
-        //Get Components
-        rb2D = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>(); //Get Rigidbody
+        rb.drag = drag; //Apply Drag Variable to Rigidbody Drag
     }
 
-    void Fire() //Shooting Method
+    void Fire() //Firing Method
     {
-        GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-        timeSinceLastShot = 0;
+        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation); //Spawn Projectile
+        fireSpeed = (maxMoveSpeed) / -4; //Firing Move Speed
+        timeSinceLastFire = 0; //Confirm Fire
     }
+
+    // void Rush() //Rushing Method
+    // {
+    //     transform.Find("Trail").GetComponent<TrailRenderer>().emitting = true; //Enable Trail
+    //     rushSpeed = (maxMoveSpeed) / 4; //Rushing Move Speed
+
+    //     float deadzone = 0.2f; //For Joysticks
+    //     if (YMove <= deadzone && YMove >= -deadzone && XMove <= deadzone && XMove >= -deadzone || Input.GetButtonDown("Rush") || Input.GetButtonDown("Rush2")) rushing = false; //Stop Rushing If Input Is Lost OR Rush Is Pressed Again
+    //     else rushing = true; //Keep Rushing
+    // }
 
     void Update()
     {
-        rb2D.drag = drag;
-
-        timeSinceLastShot += Time.deltaTime;
-        if (timeSinceLastShot > timeBetweenShots)
+        timeSinceLastFire += Time.deltaTime; //Count Time Since Fire
+        if (timeSinceLastFire > firesPerSecond) //Fires Per Second If Statement
         {
             Fire();
         }
-
-        //Disable Trail
-        player.transform.Find("Trail").GetComponent<TrailRenderer>().emitting = false;
-
-        //Rush Input
-        if (Input.GetAxisRaw("Rush") > 0 || Input.GetAxisRaw("Rush2") > 0)
-        {
-            if (hasReleasedRushButton)
-            {
-                rushing = !rushing;
-                hasReleasedRushButton = false;
-            }
-        }
-        else
-        {
-            hasReleasedRushButton = true;
-        }
-        if (rushing)
-        {
-            rushSpeed = (maxSpeedX + maxSpeedY) / 4;
-            player.transform.Find("Trail").GetComponent<TrailRenderer>().emitting = true;
-        }
-        else
-        {
-            rushSpeed = 0;
-        }
-        //Deadzones for Joysticks
-        float deadzone = 0.2f;
-        if (upMove <= deadzone && upMove >= -deadzone && rightMove <= deadzone && rightMove >= -deadzone)
-            rushing = false;
     }
-
 
     void FixedUpdate()
     {
-        Coloring();
+        LerpColor(); //Lerp Color From EnergyHost.cs
 
-        float degreesPerSecond = 20;
-        transform.Rotate(new Vector3(0, 0, degreesPerSecond) * Time.deltaTime);
+        transform.Find("Trail").GetComponent<TrailRenderer>().emitting = false; //Disable Trail
+
+        float degreesPerSecond = 30;
+        transform.Rotate(new Vector3(0, 0, degreesPerSecond) * Time.deltaTime); //Rotate NPC
     }
 }

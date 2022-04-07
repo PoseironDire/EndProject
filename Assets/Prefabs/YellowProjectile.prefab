@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2161074175261597290}
-  - component: {fileID: 3948541294200749426}
   - component: {fileID: 4417591250540032456}
   - component: {fileID: 8442800134906320572}
   - component: {fileID: 2494246890116001956}
+  - component: {fileID: 3948541294200749426}
   m_Layer: 3
   m_Name: YellowProjectile
   m_TagString: Bullet
@@ -36,23 +36,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3948541294200749426
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4460747934266336926}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30a750e8edda1fc40ab17952a8c5f65f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialVelocity: 25
-  initialSpread: 0.3
-  lifeTime: 1
-  hitmarkPrefab: {fileID: 2583337556275541420, guid: 2a8eb08c55622e849a1e221b7cd9c5cd, type: 3}
-  hitmarkSpawn: {fileID: 5786585981321847083}
 --- !u!50 &4417591250540032456
 Rigidbody2D:
   serializedVersion: 4
@@ -110,7 +93,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 7c1ea699a4c2d4042900c7066462c96b, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 87152af5bde70b64b82027f878c3d91a, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.3
   m_Pitch: 2
@@ -118,7 +101,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 100
+  Priority: 50
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -196,6 +179,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3948541294200749426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4460747934266336926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4ff79fd5b4a4694dbfe5c32b0303aad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitEffectPrefab: {fileID: 2583337556275541420, guid: 2a8eb08c55622e849a1e221b7cd9c5cd, type: 3}
+  hitEffectSpawn: {fileID: 5786585981321847083}
 --- !u!1 &8135634083383203611
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,7 +206,7 @@ GameObject:
   - component: {fileID: 5051518613378011798}
   - component: {fileID: 5944789861709168559}
   m_Layer: 3
-  m_Name: Texture
+  m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -290,7 +287,7 @@ Animator:
   m_GameObject: {fileID: 8135634083383203611}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 203d576e350be1f4f8c75f97af212db8, type: 2}
+  m_Controller: {fileID: 9100000, guid: 52994756285f55c48ac77e547202b078, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

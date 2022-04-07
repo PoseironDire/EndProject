@@ -91,8 +91,8 @@ GameObject:
   - component: {fileID: 6627507350251465966}
   - component: {fileID: 6627507350251465967}
   - component: {fileID: 6627507350251465960}
-  - component: {fileID: 6627507350251465964}
   - component: {fileID: -6269529813010843817}
+  - component: {fileID: 6627507350251465964}
   m_Layer: 5
   m_Name: DamageText
   m_TagString: Untagged
@@ -164,7 +164,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &6627507350251465960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,22 +182,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &6627507350251465964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6627507350251465961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec4d9cac534cf32488a235bf53238265, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boldText: {fileID: 47776767831120215}
-  lifetime: 0.6
-  minDist: 2
-  maxDist: 5
 --- !u!82 &-6269529813010843817
 AudioSource:
   m_ObjectHideFlags: 0
@@ -210,7 +194,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 698382f7c46243a4082b73117543433e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -294,6 +278,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6627507350251465964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6627507350251465961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec4d9cac534cf32488a235bf53238265, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boldText: {fileID: 47776767831120215}
+  lifetime: 0.6
+  minDist: 2
+  maxDist: 5
 --- !u!1 &8823656733568878237
 GameObject:
   m_ObjectHideFlags: 0

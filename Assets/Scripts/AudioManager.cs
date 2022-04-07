@@ -20,10 +20,7 @@ public class AudioManager : MonoBehaviour
             ;
             s.source.loop = s.loop;
         }
-    }
 
-    void Start()
-    {
         if (soundtrack)
             Play("Soundtrack");
         if (ambience)
