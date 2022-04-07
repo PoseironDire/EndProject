@@ -2,10 +2,9 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
-    [SerializeField][Range(10, 1000)] float initialVelocity = 6;
-    [SerializeField][Range(0, 5)] float initialSpread = 0;
-
-    [SerializeField] float lifeTime = 2;
+    [HideInInspector] public float initialVelocity = 50;
+    [HideInInspector] public float initialSpread = 1;
+    [HideInInspector] public float lifeTime = 1;
 
     Rigidbody2D rb2D;
 
@@ -33,12 +32,10 @@ public class BulletController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        GameObject bullet = Instantiate(hitmarkPrefab, hitmarkSpawn.position, hitmarkSpawn.rotation);
-        GetComponent<SpriteRenderer>().enabled = false;
         GetComponent<BoxCollider2D>().enabled = false;
-        rb2D.bodyType = RigidbodyType2D.Static;
         Destroy(this.gameObject, lifeTime);
-        if (transform.childCount > 1)
-            Destroy(transform.GetChild(1).gameObject);
+        if (transform.Find("Texture"))
+            transform.Find("Texture").gameObject.SetActive(false);
+        GameObject bullet = Instantiate(hitmarkPrefab, hitmarkSpawn.position, hitmarkSpawn.rotation);
     }
 }

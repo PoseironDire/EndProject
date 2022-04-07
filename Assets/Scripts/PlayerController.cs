@@ -22,14 +22,17 @@ public class PlayerController : HealthHost
     //Shooting
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] Transform bulletSpawnPoint;
-    [SerializeField] float timeBetweenShots = 0.5f;
+    [SerializeField][Range(10, 1000)] float initialBulletVelocity = 100;
+    [SerializeField][Range(0, 10)] float initialBulletSpread = 1;
+    [SerializeField][Range(0, 1)] float bulletLifeTime = 0.7f;
+    [SerializeField][Range(0, 1)] float timeBetweenShots = 0.5f;
     private float timeSinceLastShot = 0f;
 
     //Rushing
     bool hasReleasedRushButton = true;
     bool rushing = false;
 
-    void Start()
+    void Awake()
     {
         //Get Components
         rb = GetComponent<Rigidbody2D>();
@@ -37,6 +40,10 @@ public class PlayerController : HealthHost
 
     void Fire() //Shooting Method
     {
+        bulletPrefab.GetComponent<BulletController>().initialVelocity = initialBulletVelocity;
+        bulletPrefab.GetComponent<BulletController>().initialSpread = initialBulletSpread;
+        bulletPrefab.GetComponent<BulletController>().lifeTime = bulletLifeTime;
+
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
         timeSinceLastShot = 0;
     }

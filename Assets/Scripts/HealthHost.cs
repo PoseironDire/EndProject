@@ -8,6 +8,9 @@ public class HealthHost : MonoBehaviour
 
     void Awake()
     {
+        if (gameObject.tag != "Player")
+            GetComponent<SpriteRenderer>().color = new Color(UnityEngine.Random.Range(0.1f, 1f), UnityEngine.Random.Range(0.1f, 1f), UnityEngine.Random.Range(0.1f, 1f), 1);
+
         SpriteRenderer[] children = transform.GetComponentsInChildren<SpriteRenderer>();
 
         foreach (SpriteRenderer renderer in children)

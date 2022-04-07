@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 public class DamageIndicator : MonoBehaviour
 {
-    public Text normalText;
     public Text boldText;
     public float lifetime = 0.6f;
     public float minDist = 1f;
@@ -13,13 +12,11 @@ public class DamageIndicator : MonoBehaviour
     private Vector3 targetPos;
     private float timer;
 
-    float shift;
     float damaged;
     Vector3 value;
 
     void Start()
     {
-        shift = 0;
         float direction = Random.rotation.eulerAngles.z;
         iniPos = transform.position;
         float dist = Random.Range(minDist * damaged / 100, maxDist * damaged / 100);
@@ -42,10 +39,7 @@ public class DamageIndicator : MonoBehaviour
 
     void FixedUpdate()
     {
-        shift = Mathf.Lerp(shift, 1, 0.1f);
-        Color boldColor = new Color(shift, shift, shift, 1f);
-        boldText.color = boldColor;
-
+        boldText.color = Color.Lerp(boldText.color, Color.yellow, 0.1f);
         GetComponent<AudioSource>().pitch = UnityEngine.Random.Range(1, 3);
     }
 
