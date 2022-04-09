@@ -45,7 +45,7 @@ public class NpcController : EnergyHost
     void Update()
     {
         timeSinceLastFire += Time.deltaTime; //Count Time Since Fire
-        if (timeSinceLastFire > timeBetweenShots) //Fires Per Second If Statement
+        if (timeSinceLastFire > timeBetweenBursts) //Fires Per Second If Statement
         {
             Fire();
         }

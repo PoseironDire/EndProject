@@ -3,44 +3,47 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public int playerNumber;
-    public PlayerController player;
+    PlayerController controller;
+
+    void Awake()
+    {
+        controller = transform.GetComponentInChildren<PlayerController>();
+    }
 
     void Update()
     {
         if (playerNumber == 1)  //Player1
         {
-            player.XMove = Input.GetAxis("LX");
-            player.YMove = Input.GetAxis("LY");
+            controller.XMove = Input.GetAxis("LX");
+            controller.YMove = Input.GetAxis("LY");
 
-            if (Input.GetAxisRaw("Rush2") > 0 || player.rushing) //Rushing Input
+            if (Input.GetAxisRaw("Rush2") > 0 || controller.rushing) //Rushing Input
             {
-                player.Rush();
+                controller.Rush();
             }
-            else player.applyRushSpeed = 0; //Return To Original Move Speed
+            else controller.applyRushSpeed = 0; //Return To Original Move Speed
 
-            if (Input.GetAxisRaw("R2") > 0 || player.firing)  //Shooting Input
+            if (Input.GetAxisRaw("R2") > 0 || controller.attacking)  //Shooting Input
             {
-                player.Fire();
+                controller.Attack();
             }
-            else player.applyFireSpeed = 0; //Return To Original Move Speed
         }
 
         if (playerNumber == 2) //Player2
         {
-            player.XMove = Input.GetAxisRaw("Horizontal");
-            player.YMove = Input.GetAxisRaw("Vertical");
+            controller.XMove = Input.GetAxisRaw("Horizontal");
+            controller.YMove = Input.GetAxisRaw("Vertical");
 
-            if (Input.GetAxisRaw("Rush") > 0 || player.rushing) //Rushing Input
+            if (Input.GetAxisRaw("Rush") > 0 || controller.rushing) //Rushing Input
             {
-                player.Rush();
+                controller.Rush();
             }
-            else player.applyRushSpeed = 0; //Return To Original Move Speed
+            else controller.applyRushSpeed = 0; //Return To Original Move Speed
 
-            if (Input.GetAxisRaw("Fire1") > 0 || player.firing)  //Shooting Input
+            if (Input.GetAxisRaw("Fire1") > 0 || controller.attacking)  //Shooting Input
             {
-                player.Fire();
+                controller.Attack();
             }
-            else player.applyFireSpeed = 0; //Return To Original Move Speed
         }
     }
 
@@ -50,11 +53,11 @@ public class PlayerManager : MonoBehaviour
         {
             if (Input.GetAxis("RX") != 0 || Input.GetAxis("RY") != 0) //Rotation with Joystick Only  If Input Is Detected
             {
-                player.JoystickRotation();
+                controller.JoystickRotation();
             }
             else //If Rotational Input Isn't Detected
             {
-                player.FreeRotation();
+                controller.FreeRotation();
             }
         }
 
@@ -62,11 +65,11 @@ public class PlayerManager : MonoBehaviour
         {
             if (Input.GetMouseButton(1)) //Rotation with Right Mouse Click
             {
-                player.MouseRotation();
+                controller.MouseRotation();
             }
             else //If Rotational Input Isn't Detected
             {
-                player.FreeRotation();
+                controller.FreeRotation();
             }
         }
     }

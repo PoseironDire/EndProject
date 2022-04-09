@@ -7,16 +7,18 @@ public class PlayerController : EnergyHost
     [Range(100, 1000)] public float maxMoveSpeed = 750; //Max Move Speed
     [Range(100, 1000)] public float rushSpeedBonus = 150; //Speed While Rushing
     [Range(-1000, -100)] public float fireSpeedPenalty = -500; //Speed While Firing
-    [Range(10, 100)] public float maxRotationResistance = 50; //Rotation Resistance
+    [Range(0.01f, 1)] public float maxRotationResistance = 50; //Rotation Resistance
     [Range(10, 500)] public float drag = 10; //Drag
     [Range(0, 10)] public float scopeDistance = 1; //Distance Twoards Player's Direction
+    public bool ranged = false; //Distance Twoards Player's Direction
     public Camera playerCamera; //Camera
     public Transform cameraLookAt; //Camera's Target
+    Animator animator; //Animator
 
     [HideInInspector] public Vector3 velocity = Vector3.zero; //Vector Zero
     [HideInInspector] public bool rushing = false; //Rushing Bool
     [HideInInspector] public float applyRushSpeed = 0f; //Time Since Last Burst
-    [HideInInspector] public bool firing = false; //Firing Bool
+    [HideInInspector] public bool attacking = false; //Firing Bool
     [HideInInspector] public float applyFireSpeed = 0f; //Time Since Last Burst
     [HideInInspector] public float XMove; //X Movement Input 
     [HideInInspector] public float YMove; //Y Movement Input
@@ -29,29 +31,47 @@ public class PlayerController : EnergyHost
     {
         rb = GetComponent<Rigidbody2D>(); //Get Rigidbody
         rb.drag = drag; //Apply Drag Variable to Rigidbody Drag
+
+        animator = GetComponentInChildren<Animator>();
     }
 
-    public void Fire() //Firing Method
+    public void Attack() //Firing Method
     {
-        if (!firing) //Trigger Burst
+        if (ranged)
         {
-            storedShots = 0;
-            timeSinceLastBurst = 0;
-            firing = true;
+
+            if (!attacking) //Trigger Burst
+            {
+                storedShots = 0;
+                timeSinceLastBurst = 0;
+                attacking = true;
+            }
+
+            if (attacking && timeSinceLastFire > ((timeBetweenBursts * (burstTime * 10)) / (float)projectileBurst) / 10 && storedShots < projectileBurst)
+            {
+                applyFireSpeed = fireSpeedPenalty;
+                GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation); //Spawn Projectile
+                projectile.transform.SetParent(transform.parent); //Make The Projectile A Child Of This Game Object 
+                Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+                timeSinceLastFire = 0;
+                storedShots++;
+            }
         }
-        if (firing && timeSinceLastFire > ((timeBetweenShots * 5) / (float)projectileBurst) / 10 && storedShots < projectileBurst)
+        else
         {
-            applyFireSpeed = fireSpeedPenalty;
-            GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation); //Spawn Projectile
-            projectile.transform.SetParent(transform.parent); //Make The Projectile A Child Of This Game Object 
-            Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(), GetComponent<Collider2D>());
-            timeSinceLastFire = 0;
-            storedShots++;
+            if (!attacking) //Trigger Burst
+            {
+                applyFireSpeed = fireSpeedPenalty;
+                animator.SetTrigger("Attack");
+                timeSinceLastBurst = 0;
+                attacking = true;
+            }
         }
 
-        if (timeSinceLastBurst > timeBetweenShots)
+        if (timeSinceLastBurst > timeBetweenBursts)
         {
-            firing = false;
+            applyFireSpeed = 0; //Return To Original Move Speed
+            attacking = false;
         }
     }
 
@@ -70,26 +90,23 @@ public class PlayerController : EnergyHost
         //Move Camera's Target Based On Joystick Input Times Max Scope Distance:
         cameraLookAt.position = new Vector3(transform.position.x + Input.GetAxis("RX") * scopeDistance, transform.position.y + Input.GetAxis("RY") * scopeDistance);
         //Rotate Player's Front Parallel To Joystick Based On Screen:
-        transform.up = Vector3.SmoothDamp(transform.up, new Vector3(Input.GetAxis("RX"), Input.GetAxis("RY")), ref velocity, maxRotationResistance / 500);
+        float rotationResistance = maxRotationResistance;
+        transform.up = Vector3.SmoothDamp(transform.up, new Vector3(Input.GetAxis("RX"), Input.GetAxis("RY")), ref velocity, rotationResistance / 2);
         //Adapt Rotation Resistance Based On Input Strength:
-        maxRotationResistance = Mathf.Lerp(maxRotationResistance, (50 - (Mathf.Max(Mathf.Abs(Input.GetAxis("RX")), Mathf.Abs(Input.GetAxis("RY")))) * 10), 1);
+        rotationResistance = Mathf.Lerp(rotationResistance, (50 - (Mathf.Max(Mathf.Abs(Input.GetAxis("RX")), Mathf.Abs(Input.GetAxis("RY")))) * 10), 1);
     }
 
     public void MouseRotation()
     {
         Vector3 mouseScreenPos = playerCamera.ScreenToWorldPoint(Input.mousePosition); //Get Mouse Position
-        cameraLookAt.position = new Vector3(Mathf.MoveTowards(transform.position.x, mouseScreenPos.x, scopeDistance), Mathf.MoveTowards(transform.position.y, mouseScreenPos.y, scopeDistance)); //Move Camera's Target To Mouse OR Max Scope Distance
         Vector3 difference = mouseScreenPos - transform.position; //Get Mouse & Player Position Difference
-        difference.Normalize();
-        float z = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg; //Calculate Desiret Rotation
-        var desiredRot = Quaternion.Euler(0f, 0f, z - 90); //Convert Desiret Rotation Amount to Quaternion
-        transform.rotation = Quaternion.Lerp(transform.rotation, desiredRot, Time.deltaTime * maxRotationResistance); //Rotate Using The Desiret Quaternion
-
+        cameraLookAt.position = new Vector3(Mathf.MoveTowards(transform.position.x, mouseScreenPos.x, scopeDistance), Mathf.MoveTowards(transform.position.y, mouseScreenPos.y, scopeDistance)); //Move Camera's Target To Mouse OR Max Scope Distance
+        transform.up = Vector3.SmoothDamp(transform.up, new Vector3(difference.x, difference.y), ref velocity, maxRotationResistance); //Rotate Player's Front Twoards Mouse Based On Screen
     }
 
     public void FreeRotation()
     {
-        transform.up = Vector3.SmoothDamp(transform.up, new Vector3(XMove, YMove), ref velocity, maxRotationResistance / 500); //Rotate Player's Front Parallel To Input Based On Screen
+        transform.up = Vector3.SmoothDamp(transform.up, new Vector3(XMove, YMove), ref velocity, maxRotationResistance); //Rotate Player's Front Parallel To Input Based On Screen
         cameraLookAt.position = new Vector3(transform.position.x + XMove * scopeDistance, transform.position.y + YMove * scopeDistance); //Move Camera's Target Based On Input Times Max Scope Distance:
     }
     void Update()

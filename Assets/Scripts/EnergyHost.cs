@@ -11,8 +11,9 @@ public class EnergyHost : MonoBehaviour
     [Range(0, 300)] public float initialProjectileVelocity; //Projectile Speed
     [Range(0, 50)] public float initialProjectileSpread; //Projectile Spread
     [Range(0, 1)] public float projectileLifeTime; //Projectile Life Time
-    [Range(0, 5)] public float timeBetweenShots; //Fires Per Second
+    [Range(0, 5)] public float timeBetweenBursts; //Fires Per Second
     [Range(1, 10)] public int projectileBurst; //Fires Per Second
+    [Range(0.1f, 1)] public float burstTime; //Time for Burst To Finish
     [Range(0, 1)] public float projectileVolume = 0.5f; //Volume
     [Range(0, 5)] public float minProjectilePitch = 1; //Minimum Pitch
     [Range(0, 5)] public float maxProjectilePitch = 2.5f; //Maximum Pitch
