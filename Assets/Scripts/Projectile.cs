@@ -2,17 +2,9 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    //Values
-    float initialVelocity;
-    float initialSpread;
-    float lifeTime;
-    float shotsPerSecond;
-    float volume;
-    float maxPitch;
-    float minPitch;
-
-    GameObject player; //Player
     Rigidbody2D rb2D; //Rigidbody
+    GameObject player; //Player
+    PlayerController controller; //Player
 
     [SerializeField] GameObject hitEffectPrefab; //Hit Effect
     [SerializeField] Transform hitEffectSpawn; //Hit Effect Spawn Point
@@ -21,25 +13,16 @@ public class Projectile : MonoBehaviour
     {
         rb2D = GetComponent<Rigidbody2D>(); //Get Rigidbody
         player = FindObjectOfType<PlayerController>().gameObject; //Get Player
-
-        //Get Values From Player (Temporary Feature)
-        initialVelocity = player.GetComponent<PlayerController>().initialProjectileVelocity;
-        initialSpread = player.GetComponent<PlayerController>().initialProjectileSpread;
-        lifeTime = player.GetComponent<PlayerController>().projectileLifeTime;
-        shotsPerSecond = player.GetComponent<PlayerController>().firesPerSecond;
-        volume = player.GetComponent<PlayerController>().projectileVolume;
-        maxPitch = player.GetComponent<PlayerController>().maxPitch;
-        minPitch = player.GetComponent<PlayerController>().minPitch;
+        controller = player.GetComponent<PlayerController>(); //Get Controller
 
         //Get Random Spread
-        initialSpread *= UnityEngine.Random.Range(10, -10);
-        rb2D.velocity = transform.up * initialVelocity + transform.right * initialSpread;
+        rb2D.velocity = transform.up * controller.initialProjectileVelocity + transform.right * UnityEngine.Random.Range(controller.initialProjectileSpread, -controller.initialProjectileSpread); ;
 
         //Config Sound
-        GetComponent<AudioSource>().volume = volume;
-        GetComponent<AudioSource>().pitch = UnityEngine.Random.Range(minPitch, maxPitch);
+        GetComponent<AudioSource>().volume = controller.projectileVolume;
+        GetComponent<AudioSource>().pitch = UnityEngine.Random.Range(controller.minProjectilePitch, controller.maxProjectilePitch);
 
-        Destroy(this.gameObject, lifeTime); //Destroy
+        Destroy(this.gameObject, controller.projectileLifeTime); //Destroy
     }
 
     void FixedUpdate()
@@ -55,5 +38,6 @@ public class Projectile : MonoBehaviour
         GetComponent<BoxCollider2D>().enabled = false; //Disable Hitbox
         if (transform.Find("Visual")) transform.Find("Visual").gameObject.SetActive(false); //Disable Visuals
         GameObject projectile = Instantiate(hitEffectPrefab, hitEffectSpawn.position, hitEffectSpawn.rotation); //Spawn Hit Effect
+        projectile.transform.SetParent(transform.parent); //Make The Hit Effect A Child Of This Game Object 
     }
 }

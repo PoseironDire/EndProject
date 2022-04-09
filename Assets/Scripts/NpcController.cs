@@ -14,16 +14,6 @@ public class NpcController : EnergyHost
     float XMove; //X Movement Input 
     float YMove; //Y Movement Input
 
-    [SerializeField] GameObject projectilePrefab; //Projectile
-    [SerializeField] Transform projectileSpawnPoint; //Projectile Spawn Point
-    [Range(30, 300)] public float initialProjectileVelocity = 100; //Projectile Speed
-    [Range(0, 10)] public float initialProjectileSpread = 1; //Projectile Spread
-    [Range(0, 1)] public float projectileLifeTime = 0.7f; //Projectile Life Time
-    [Range(0, 1)] public float firesPerSecond = 0.5f; //Fires Per Second
-    [Range(0, 1)] public float projectileVolume = 0.5f; //Volume
-    [Range(0, 5)] public float minPitch = 1; //Minimum Pitch
-    [Range(0, 5)] public float maxPitch = 2.5f; //Maximum Pitch
-
     private float timeSinceLastFire = 0f; //Time Since Last Fire
 
     // bool rushing = false; //Rushing Bool
@@ -37,6 +27,7 @@ public class NpcController : EnergyHost
     void Fire() //Firing Method
     {
         GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation); //Spawn Projectile
+        projectile.transform.SetParent(transform.parent); //Make The Projectile A Child Of This Game Object 
         fireSpeed = (maxMoveSpeed) / -4; //Firing Move Speed
         timeSinceLastFire = 0; //Confirm Fire
     }
@@ -54,7 +45,7 @@ public class NpcController : EnergyHost
     void Update()
     {
         timeSinceLastFire += Time.deltaTime; //Count Time Since Fire
-        if (timeSinceLastFire > firesPerSecond) //Fires Per Second If Statement
+        if (timeSinceLastFire > timeBetweenShots) //Fires Per Second If Statement
         {
             Fire();
         }

@@ -10,13 +10,28 @@ public class CameraFollow : MonoBehaviour
     Transform lookAt; //What Object To Follow
 
     float maxViewSize; //Max View Size
-    void Awake()
+
+    public Matrix4x4 originalProjection;
+    Camera cam;
+
+    void Start()
     {
-        player = FindObjectOfType<PlayerController>().gameObject;
+        player = transform.parent.Find("Body").gameObject;
         lookAt = player.GetComponentInChildren<Transform>().Find("CameraLookAt");
 
         maxViewSize = viewSize * 2;
+
+        cam = GetComponent<Camera>();
+        originalProjection = cam.projectionMatrix;
     }
+
+    // void Update()
+    // {
+    //     Matrix4x4 p = originalProjection;
+    //     p.m01 += Mathf.Sin(Time.time * 1.2F) * 0.1F;
+    //     p.m10 += Mathf.Sin(Time.time * 1.5F) * 0.1F;
+    //     cam.projectionMatrix = p;
+    // }
 
     Vector3 velocity = Vector3.zero;
     void FixedUpdate()
