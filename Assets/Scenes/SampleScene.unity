@@ -65290,11 +65290,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32924f386ae3a6c4db12892cacb3d208, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundtrack: 0
+  soundtrack: 1
   ambience: 0
   sounds:
   - name: Soundtrack
-    clip: {fileID: 8300000, guid: d981800ff1ce04a42a5a10e8e67ca530, type: 3}
+    clip: {fileID: 8300000, guid: 63fa0ee9282010d478b4c1a93f80480c, type: 3}
     priority: 100
     volume: 0.1
     pitch: 1
@@ -67090,7 +67090,7 @@ MonoBehaviour:
   timeBetweenBursts: 0.5
   projectileBurst: 7
   burstTime: 0.5
-  projectileVolume: 0.5
+  projectileVolume: 0.1
   minProjectilePitch: 1
   maxProjectilePitch: 2.5
   maxMoveSpeed: 500
@@ -67297,7 +67297,7 @@ MonoBehaviour:
   timeBetweenBursts: 0.5
   projectileBurst: 7
   burstTime: 0.5
-  projectileVolume: 0.5
+  projectileVolume: 0.1
   minProjectilePitch: 1
   maxProjectilePitch: 2.5
   maxMoveSpeed: 500
